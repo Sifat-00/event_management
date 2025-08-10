@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Event Form</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 py-10">
+
+
+  <nav class="bg-white text-black ">
+
+
+  <div class="max-w-7xl justify-between items-center mx-auto px-6 py-4 flex ">
+
+
+    <div class="text-2xl font-extrabold text-pink-700">
+
+
+
+      Event <span class="text-gray-900">Manager</span>
+    </div>
+    
+    <div class="space-x-6 text-sm font-semibold flex items-center">
+
+
+      {% if user.is_authenticated and user.is_superuser %}
+
+
+        <a href="{% url 'admin-dashboard' %}" class="hover:text-pink-700">Admin Dashboard</a>
+      {% endif %}
+
+      {% if user.is_authenticated and user.profile.role == 'organizer' %}
+
+
+        <a href="{% url 'organizer-dashboard' %}" class="hover:text-pink-700">Organizer Dashboard</a>
+      {% endif %}
+
+      <a href="{% url 'home' %}" class="hover:text-pink-700">Home</a>
+
+
+
+      <a href="{% url 'event_list' %}" class="hover:text-pink-700">Events</a>
+
+      {% if user.is_authenticated %}
+
+
+        <span class="text-gray-600">Hello, {{ user.username }}</span>
+
+
+        <form action="{% url 'logout' %}" method="POST" >
+          {% csrf_token %}
+          <button type="submit" class="text-red-600 hover:underline">Logout</button>
+
+        </form>
+      {% else %}
+
+
+        <a href="{% url 'sign-in' %}" class="bg-pink-600  rounded hover:bg-pink-700 text-white px-3 py-1 ">
+          Login
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<br><br>
+
+  <div class=" p-6 rounded     max-w-lg mx-auto bg-white">
+
+
+    <h1 class="text-2xl font-bold mb-6">Create</h1>
+
+    <form method="post",enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {% for field in form %}
+      <div class="mb-4">
+
+
+        <label class="font-medium text-gray-700  block mb-1 text-sm ">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+
+
+          <p class="text-red-500 text-sm">{{ field.errors.0 }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      <div class="flex justify-between">
+
+
+
+        <button type="submit" class="  hover:bg-indigo-700 text-white bg-indigo-600 py-2 px-4 rounded">
+        Submit
+      </button>
+
+
+       {% if user.is_superuser %}
+
+
+          <a href="{% url 'admin-dashboard' %}" class="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded">
+            Cancel
+          </a>
+        {% elif  user.groups.all.0.name == 'Organizer' %}
+
+        
+          <a href="{% url 'organizer-dashboard' %}" class=" hover:bg-gray-400 text-black bg-gray-300  py-2 px-4 rounded">
+            Cancel
+          </a>
+        {% else %}
+          <a href="{% url 'home' %}" class=" hover:bg-gray-400 bg-gray-300  text-black py-2 px-4 rounded">
+            Cancel
+          </a>
+        {% endif %}
+
+      </div>
+
+    </form>
+  </div>
+</body>
+</html>

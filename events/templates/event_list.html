@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Events</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  
+</head>
+<body class="bg-gray-50 p-10">
+
+
+
+   <nav class="bg-white text-black ">
+
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+
+
+    <div class="text-2xl font-extrabold text-pink-700">
+
+
+
+      Event <span class="text-gray-900">Manager</span>
+
+    </div>
+
+
+    
+    <div class="space-x-6 text-sm font-semibold flex items-center">
+
+
+
+      {% if user.is_authenticated and user.is_superuser %}
+
+
+
+        <a href="{% url 'admin-dashboard' %}" class="hover:text-pink-700">Admin Dashboard</a>
+
+
+      {% endif %}
+
+      {% if user.is_authenticated and user.profile.role == 'organizer' %}
+
+
+
+        <a href="{% url 'organizer-dashboard' %}" class="hover:text-pink-700">Organizer Dashboard</a>
+      {% endif %}
+
+      <a href="{% url 'home' %}" class="hover:text-pink-700">Home</a>
+
+
+
+      <a href="{% url 'event_list' %}" class="hover:text-pink-700">Events</a>
+
+      {% if user.is_authenticated %}
+
+
+        <span class="text-gray-600">Hello, {{ user.username }}</span>
+
+        <form action="{% url 'logout' %}" method="POST" >
+
+
+
+          {% csrf_token %}
+
+
+          <button type="submit" class="text-red-600 hover:underline">Logout</button>
+        </form>
+
+
+      {% else %}
+
+
+        <a href="{% url 'sign-in' %}" class="bg-pink-600  rounded hover:bg-pink-700 text-white px-3 py-1">
+
+
+          Login
+        </a>
+
+
+      {% endif %}
+    </div>
+
+
+  </div>
+</nav>
+
+
+  <br>
+  <br>
+
+  <div class="max-w-5xl mx-auto bg-white p-8 rounded ">
+
+
+
+    <form method="get" class="mb-6 flex flex-wrap items-center gap-4">
+
+      <input 
+        type="text" 
+        name="search" 
+
+
+        placeholder="Search by name or location" 
+
+
+        value="{{ search_query }}" 
+
+
+        class="flex-grow border border-gray-300 rounded px-4 py-2 "
+      />
+
+      <label for="category" class="font-semibold text-gray-700 ">Filter by Category:</label>
+
+
+
+      <select id="category" name="category" class="border border-gray-300 rounded px-3 py-2  ">
+
+
+        <option value="">All Categories</option>
+
+
+
+        {% for category in categories %}
+
+
+          <option value="{{ category.id }}" {% if selected_category == category.id %}   selected{% endif %}>
+            {{ category.name }}
+
+
+          </option>
+
+
+        {% endfor %}
+      </select>
+
+      <button type="submit" class="bg-indigo-600   rounded hover:bg-indigo-700  text-white px-5 py-2  ">
+
+
+        Filter
+      </button>
+
+
+
+    </form>
+
+    <div class="space-y-6">
+
+
+      {% if events %}
+
+
+        {% for event in events %}
+          <div class=" hover:shadow-lg  p-5 border rounded shadow flex justify-between items-center">
+
+
+
+            <div>
+              <h2 class="text-xl font-bold">{{ event.title }}</h2>
+
+
+              <p class="text-gray-600">{{ event.category.name }} | {{ event.date }}</p>
+
+
+              <p class="text-sm mt-1  text-gray-500 ">{{ event.location }}</p>
+            </div>
+
+            <div class="space-x-4 flex-shrink-0">
+
+              <a href="{% url 'event-detail' event.id %}" 
+
+
+
+                 class=" hover:underline font-semibold  text-indigo-600">
+                Details
+              </a>
+            </div>
+            
+
+          </div>
+        {% endfor %}
+
+
+      {% else %}
+
+
+
+        <p class="text-gray-500 text-center py-10">No events found for this category</p>
+
+      {% endif %}
+    </div>
+
+
+
+  </div>
+</body>
+</html>

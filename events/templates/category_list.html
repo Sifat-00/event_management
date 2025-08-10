@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 py-10">
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded">
+
+    <h1 class="text-3xl font-bold mb-6">All Categories</h1>
+
+
+
+    <div class="flex justify-between">
+
+
+          <a href="{% url 'category-create' %}" class=" text-white py-2 px-4  mb-4 inline-block bg-green-600 rounded hover:bg-green-700">
+
+
+Add Category
+
+
+    </a>
+
+     {% if user.is_superuser %}
+
+
+
+  <a href="{% url 'admin-dashboard' %}" 
+
+
+     class="inline-flex  text-gray-800 font-medium py-2 px-4 rounded  items-center bg-gray-200 hover:bg-gray-300 shadow-sm ">
+
+    ← Back to Admin
+  </a>
+
+{% elif user.groups.all|length > 0 and user.groups.all.0.name == 'Organizer' %}
+
+
+  <a href="{% url 'organizer-dashboard' %}" 
+
+
+     class="inline-flex  hover:bg-gray-300 text-gray-800  items-center bg-gray-200 font-medium py-2 px-4 rounded shadow-sm">
+
+
+    ← Back to Dashboard
+
+
+  </a>
+{% endif %}
+
+    </div>
+
+
+    <table class="w-full border mt-4">
+
+
+      <thead class="bg-gray-200">
+
+
+        <tr>
+
+
+          <th class="py-2 px-4 text-left">Name</th>
+
+
+          <th class="py-2 px-4 text-left">Description</th>
+
+
+          <th class="py-2 px-4">Actions</th>
+        </tr>
+
+
+      </thead>
+      <tbody>
+
+        {% for category in categories %}
+        <tr class="border-t">
+
+
+          <td class="py-2 px-4">{{ category.name }}</td>
+
+
+          <td class="py-2 px-4">{{ category.description }}</td>
+
+
+          <td class="py-2 px-4 text-center">
+
+
+            <a href="{% url 'category-update' category.id %}" class=" hover:underline mr-3  text-blue-600">Edit</a>
+
+
+            <a href="{% url 'category-delete' category.id %}" class="hover:underline text-red-600 ">Delete</a>
+          </td>
+        </tr>
+
+
+        {% empty %}
+        <tr>
+
+
+          <td colspan="3" class="text-center py-4 text-gray-500">No categories found.</td>
+
+
+        </tr>
+        {% endfor %}
+      </tbody>
+
+
+    </table>
+  </div>
+  
+</body>
+</html>

@@ -1,0 +1,252 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ event.title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen">
+
+
+  <nav class="bg-white text-black ">
+
+
+
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+
+    <div class="text-2xl font-extrabold text-pink-700">
+
+
+      Event <span class="text-gray-900">Manager</span>
+
+
+    </div>
+    
+    <div class="space-x-6 text-sm font-semibold flex items-center">
+
+
+      {% if user.is_authenticated and user.is_superuser %}
+
+
+        <a href="{% url 'admin-dashboard' %}" class="hover:text-pink-700">Admin Dashboard</a>
+
+
+      {% endif %}
+
+      {% if user.is_authenticated and user.profile.role == 'organizer' %}
+
+
+        <a href="{% url 'organizer-dashboard' %}" class="hover:text-pink-700">Organizer Dashboard</a>
+
+
+      {% endif %}
+
+      <a href="{% url 'home' %}" class="hover:text-pink-700">Home</a>
+
+
+      <a href="{% url 'event_list' %}" class="hover:text-pink-700">Events</a>
+
+
+      {% if user.is_authenticated %}
+
+
+        <span class="text-gray-600">Hello, {{ user.username }}</span>
+
+
+        <form action="{% url 'logout' %}" method="POST" >
+
+          {% csrf_token %}
+
+
+          <button type="submit" class="text-red-600 hover:underline">Logout</button>
+
+
+        </form>
+      {% else %}
+
+
+        <a href="{% url 'sign-in' %}" class="bg-pink-600 text-white px-3 py-1 rounded hover:bg-pink-700">
+
+          Login
+        </a>
+
+
+      {% endif %}
+    </div>
+
+
+  </div>
+</nav>
+
+
+
+  <div class="relative h-64 w-full bg-cover bg-center rounded-b-lg shadow-md"
+
+
+       style="background-image: url('{% if event.image %}{{ event.image.url }}
+
+
+       {% else %}{% static 'images/default_event.jpg' %}{% endif %}');">
+    <div class=" bg-black bg-opacity-50 flex items-center justify-center px-4">
+
+
+      <h1 class=" font-bold text-white  text-4xl md:text-5xl  text-center">{{ event.title }}</h1>
+
+    </div>
+  </div>
+
+
+  <div class=" px-6 py-10 bg-white mt-8 rounded-lg shadow-md   max-w-5xl mx-auto">
+
+
+
+    <h2 class=" border-b pb-2 text-gray-800  text-2xl font-semibold mb-6">Event Details</h2>
+
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div>
+
+
+        <p class="mb-3"><span class="font-semibold">Date:</span> {{ event.date }}</p>
+
+        <p class="mb-3"><span class="font-semibold">Time:</span> {{ event.time }}</p>
+
+
+        <p class="mb-3"><span class="font-semibold">Location:</span> {{ event.location }}</p>
+
+
+
+        <p class="mb-3"><span class="font-semibold">Category:</span> {{ event.category.name }}</p>
+
+
+      </div>
+      <div>
+        <p class="mb-3 font-semibold">Description:</p>
+
+
+        <p class=" whitespace-pre-line  text-gray-700">{{ event.description }}</p>
+
+
+      </div>
+    </div>
+
+
+
+
+
+
+        <div class="mb-10 text-center">
+
+      <a href="{% url 'participant_create' event.id %}"
+
+
+         class=" rounded-lg font-semibold hover:bg-indigo-700  inline-block px-8 py-3 bg-indigo-600 text-white">
+
+
+        Join the event
+      </a>
+    </div>
+  
+
+
+
+    <div>
+
+      <h3 class="text-xl font-semibold mb-4">Participants ({{ participants.count }})</h3>
+
+
+      <form method="get" class="mb-6 flex max-w-md mx-auto">
+
+
+        <input type="text" name="search" value="{{ search_query }}" placeholder="Search participants by name or email"
+
+
+               class="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg " />
+
+        <button type="submit"
+
+
+                class="rounded-r-lg hover:bg-indigo-700   bg-indigo-600 text-white px-6  ">
+
+          Search
+        </button>
+      </form>
+
+      <div class="overflow-x-auto">
+
+
+        <table class="min-w-full border border-gray-200 rounded-lg">
+
+
+          <thead class="bg-gray-100 text-gray-700">
+            <tr>
+              <th class="text-left border-b py-3 px-6  border-gray-300">Name</th>
+
+
+              <th class=" text-left border-b py-3 px-6  border-gray-300">Email</th>
+
+
+              <th class=" border-b border-gray-300 py-3 px-6 text-center ">Remove</th>
+
+
+            </tr>
+          </thead>
+          <tbody>
+
+
+            {% if participants %}
+
+              {% for participant in participants %}
+
+
+              <tr class="hover:bg-gray-50 border-b border-gray-200">
+
+
+                <td class="py-3 px-6">{{ participant.name }}</td>
+
+                <td class="py-3 px-6">{{ participant.email }}</td>
+
+                 <td>
+
+                   {% if user.is_superuser %}
+
+        <a href="{% url 'participant_delete' participant.id  %}" 
+
+           class="bg-gray-300  text-black py-2 px-6  hover:bg-gray-400 rounded inline-block">
+
+
+          Remove
+        </a>
+      {% endif %}
+
+
+
+                 </td>
+              </tr>
+
+              {% endfor %}
+            {% else %}
+              <tr>
+
+                <td colspan="3" class="text-center py-6 text-gray-500">No participants found.</td>
+              </tr>
+            {% endif %}
+
+
+          </tbody>
+        </table>
+
+
+
+      </div>
+    </div>
+
+    
+
+  </div>
+
+</body>
+</html>

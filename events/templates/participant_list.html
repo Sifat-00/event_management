@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Participant List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 py-10">
+
+
+  <div class="max-w-5xl mx-auto bg-white p-6 rounded ">
+
+
+
+      <h1 class="text-3xl font-bold mb-5">All Participants</h1>
+
+ <nav class="bg-white text-black">
+
+
+  <div class="max-w-7xl mx-auto  items-center  px-5 py-4 flex justify-between">
+
+
+        <div class="text-2xl font-extrabold text-pink-700">
+
+
+          Event <a class="text-gray-900">Manager</a>
+
+
+        </div>
+    
+    <div class="space-x-6 text-sm font-semibold flex items-center">
+
+      {% if user.is_authenticated and user.is_superuser %}
+
+        <a href="{% url 'admin-dashboard' %}" class="hover:text-pink-700">Admin Dashboard</a>
+
+
+      {% endif %}
+
+      {% if user.is_authenticated and user.profile.role == 'organizer' %}
+
+
+        <a href="{% url 'organizer-dashboard' %}" class="hover:text-pink-700">Organizer Dashboard</a>
+
+
+      {% endif %}
+
+      <a href="{% url 'home' %}" class="hover:text-pink-700">Home</a>
+
+
+      <a href="{% url 'event_list' %}" class="hover:text-pink-700">Events</a>
+
+      {% if user.is_authenticated %}
+
+        <a class="text-gray-600">Hello, {{ user.username }}</a>
+        <form action="{% url 'logout' %}" method="POST" >
+          {% csrf_token %}
+
+          <button type="submit" class= " hover:underline text-red-600 ">Logout</button>
+        </form>
+      {% else %}
+
+        <a href="{% url 'sign-in' %}" class=" text-white px-2 bg-pink-600  py-1 rounded hover:bg-pink-700">
+          Login
+
+        </a>
+
+      {% endif %}
+
+    </div>
+
+
+  </div>
+</nav>
+
+
+
+    <table class="w-full border mt-4">
+
+      <thead class="bg-gray-200"
+      >
+        <tr>
+          <th class="py-2 px-4 text-left">Name</th>
+          <th class="py-2 px-4 text-left">Email</th>
+
+          <th class="py-2 px-4 text-left">Events</th>
+          <th class="py-2 px-4 text-center">
+            Actions</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+{% for participant in participants %}
+
+
+    <tr class="border">
+
+        <td class="py-2 px-4">{{ participant.name }}</td>
+
+        <td class="py-2 px-4">{{ participant.email }}</td>
+
+
+        <td class="py-2 px-4">
+
+            {% for event in participant.events.all %}
+
+                <span class="inline-block  text-sm px-2 py-1 bg-gray-200  rounded mr-1 mb-1">{{ event.name }}</span>
+
+
+            {% empty %}
+
+                <a class="text-gray-500">No events</a>
+            {% endfor %}
+
+        </td>
+
+        <td class="py-2 px-4 text-center">
+
+
+            <a href="{% url 'participant_delete' participant.id %}" class="text-red-600 hover:underline">Delete</a>
+        </td>
+    </tr>
+
+{% empty %}
+    <tr>
+
+        <td colspan="4" class="text-center py-4 text-gray-500">
+          
+            No participants found.
+        </td>
+    </tr>
+{% endfor %}
+
+      </tbody>
+
+    </table>
+  </div>
+
+</body>
+</html>
+

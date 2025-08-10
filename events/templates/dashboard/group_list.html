@@ -1,0 +1,102 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-8">
+
+
+  <h1 class="text-3xl font-bold mb-6">Groups and Permissions</h1>
+
+  <table class="text-gray-700 border border-gray-200 rounded-lg in-w-full text-left   ">
+
+
+    <thead class="bg-gray-100 border-b border-gray-200">
+
+
+      <tr>
+        <th class="text-base px-6 py-4  font-semibold">Group Name</th>
+
+
+        <th class="text-base px-6 py-4  font-semibold">Permissions</th>
+
+
+        <th class="px-6 py-4 text-base font-semibold">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y divide-gray-200">
+
+      {% for group in groups %}
+
+
+      <tr class="hover:bg-blue-50  ">
+
+        <td class="font-medium px-6 py-4   whitespace-nowrap text-gray-910">{{ group.name }}</td>
+
+
+     
+        <td class="px-6 py-4">
+
+  {% with permsisison=group.permissions.all %}
+
+    {% if permsisison %}
+      <ul class="list-disc list-inside space-y-1">
+
+
+        {% for permission in permsisison %}
+
+
+          <li>{{ permission.name }} 
+
+
+            <span class="text-gray-400 text-sm ">({{ permission.codename }})</span>
+
+
+          </li>
+        {% endfor %}
+      </ul>
+
+
+    {% else %}
+
+
+      <span class="text-gray-400 italic">No permission assigned</span>
+    {% endif %}
+  {% endwith %}
+
+</td>
+
+        <td class="px-6 py-4 space-x-4">
+
+          <a href="{% url 'group-update' group.id %}" class="text-blue-600 hover:underline">Update</a>
+
+
+          <a href="{% url 'group-delete' group.id %}" 
+
+
+             class="text-red-600 hover:underline">Delete</a>
+        </td>
+      </tr>
+
+      {% empty %}
+      <tr>
+
+
+        <td colspan="3" class="px-6 py-4  italic text-center text-gray-500">No groups found</td>
+      </tr>
+
+      {% endfor %}
+
+
+    </tbody>
+  </table>
+
+  
+</body>
+</html>

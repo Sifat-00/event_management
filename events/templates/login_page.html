@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+
+<body class=" to-pink-100 min-h-screen  bg-gradient-to-br from-purple-100 flex items-center justify-center px-4">
+
+
+
+  <div class="bg-white rounded-3xl shadow-2xl flex max-w-4xl w-full h-[600px] ">
+
+
+    <div class="w-1/2 bg-gradient-to-tr from-purple-600  justify-center text-white p-16 to-pink-500 flex flex-col items-center">
+
+
+      <h2 class="text-4xl font-extrabold mb-4">Welcome Back 👋</h2>
+
+
+      <p class="text-lg">To keep connected with us please login with your personal info.</p>
+
+
+      <img src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png" alt="login illustration" class="mt-10 w-48" />
+
+
+    </div>
+
+    <div class="w-1/2 p-12 flex flex-col justify-center">
+
+
+
+      {% if messages %}
+        <div class="mb-6">
+
+          {% for message in messages %}
+
+            <p class="text-sm  border-green-400 rounded-md p-3  text-green-600 bg-green-100 border mb-2">{{ message }}</p>
+
+          {% endfor %}
+        </div>
+
+      {% endif %}
+
+      {% if form.non_field_errors %}
+        <div class="mb-6">
+
+          {% for error in form.non_field_errors %}
+
+            <p class="text-sm text-red-600 bg-red-100 p-3 mb-2   border border-red-400 rounded-md">{{ error }}</p>
+
+          {% endfor %}
+        </div>
+
+      {% endif %}
+
+      <form method="POST" class="space-y-6">
+        {% csrf_token %}
+        
+        {% for field in form %}
+          <div>
+
+            <label for="{{ field.id_for_label }}" class="block mb-2 font-medium text-gray-700">{{ field.label }}</label>
+
+            {{ field }}
+            {% if field.errors %}
+
+              <p class="mt-1 text-sm text-red-600">{{ field.errors|join:", " }}</p>
+            {% endif %}
+
+
+          </div>
+
+
+        {% endfor %}
+
+        <div class="flex  items-center text-sm  justify-between text-gray-600">
+
+
+          <label class="flex items-center space-x-2 select-none">
+
+
+            <input type="checkbox" class="w-4 h-4  bg-pink-100 text-pink-600  border-pink-300 rounded" />
+            <span>Remember me</span>
+
+
+          </label>
+          <a href="" class="text-purple-600 hover:underline">Forgot Password?</a>
+
+        </div>
+
+        <button
+          type="submit"
+
+
+          class="w-full to-pink-500 hover:from-purple-600  bg-gradient-to-r from-purple-500  hover:to-pink-600 text-white font-semibold py-3 rounded-xl shadow-lg transition-colors duration-300"
+        >
+          Sign In
+
+        </button>
+
+      </form>
+
+      <p class="mt-10 text-center text-sm text-gray-600">
+
+        Don’t have an account?
+        
+
+        <a href="{% url 'sign-up' %}" class=" hover:underline text-purple-600 font-semibold  ml-1">Sign Up</a>
+      </p>
+
+    </div>
+  </div>
+
+</body>
+</html>

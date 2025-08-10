@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+  <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl ">
+    <h3 class="text-2xl font-bold mb-6 text-gray-800">Update Group</h3>
+
+    
+
+    <form method="POST">
+
+      {% csrf_token %}
+
+      <label class="font-semibold mb-2 block  text-gray-700" for="name">Group Name</label>
+
+      <input type="text" id="name" name="name" value="{{ group.name }}" required
+
+
+             class="w-full px-4 py-2 focus:outline-none focus:ring-2  mb-6 border border-gray-300 rounded-md "/>
+
+      <fieldset class="mb-6">
+
+
+        <legend class="font-semibold mb-3 text-gray-700">Permissions</legend>
+
+
+
+        <div class="grid grid-cols-2  border-gray-300 p-3 rounded gap-2 max-h-64 overflow-y-auto border">
+
+          {% for permission in all_permissions %}
+
+            <label class="inline-flex items-center space-x-2">
+              <input type="checkbox" name="permissions" value="{{ permission.id }}"
+
+
+
+                     {% if permission.id in group_permissions %}checked{% endif %}
+
+                     class="form-checkbox text-pink-600" />
+
+              <span class="text-gray-700 text-sm">{{ permission.content_type.app_label }} - {{ permission.name }}</span>
+            </label>
+          {% endfor %}
+
+
+
+        </div>
+      </fieldset>
+
+      <button type="submit"
+
+              class="bg-pink-600  py-2 rounded hover:bg-pink-700 text-white px-4">
+
+        Update
+      </button>
+
+      <a href="{% url 'group-list' %}" class="ml-4 text-gray-600 hover:underline">Cancel</a>
+    </form>
+  </div>
+
+</body>
+
+
+</html>

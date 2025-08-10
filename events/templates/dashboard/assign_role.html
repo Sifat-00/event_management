@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+
+
+  <nav class="bg-white text-black ">
+
+
+    <div class="max-w-7xl mx-auto px-6 py-4 justify-between items-center flex ">
+
+
+      <div class="text-2xl font-extrabold text-pink-700">
+
+
+        Event <A class="text-gray-900">Manager</A>
+      </div>
+
+
+      
+      <div class="space-x-6 text-sm  flex items-center font-semibold">
+
+
+        {% if user.is_authenticated and user.is_superuser %}
+
+
+          <a href="{% url 'admin-dashboard' %}" class="hover:text-pink-700">Admin Dashboard</a>
+
+        {% endif %}
+
+        {% if user.is_authenticated and user.profile.role == 'organizer' %}
+
+
+          <a href="{% url 'organizer-dashboard' %}" class="hover:text-pink-700">Organizer Dashboard</a>
+
+
+        {% endif %}
+
+        <a href="{% url 'home' %}" class="hover:text-pink-700">Home</a>
+
+
+        <a href="{% url 'event_list' %}" class="hover:text-pink-700">Events</a>
+
+
+
+        {% if user.is_authenticated %}
+
+
+          <span class="text-gray-600">Hello, {{ user.username }}</span>
+
+
+          <form action="{% url 'logout' %}" method="POST">
+
+
+            {% csrf_token %}
+
+
+            <button type="submit" class="text-red-600 hover:underline">Logout</button>
+
+
+          </form>
+        {% else %}
+
+
+          <a href="{% url 'sign-in' %}" class=" px-3 py-1 rounded bg-pink-600 text-white hover:bg-pink-700">
+
+
+            Login
+          </a>
+
+
+        {% endif %}
+      </div>
+
+
+    </div>
+  </nav>
+
+
+  <div class="flex-grow flex items-center justify-center p-4">
+
+
+    <form method="post" class="p-8 rounded-lg max-w-xl w-full bg-white  shadow-lg space-y-6">
+
+
+      {% csrf_token %}
+
+      <h2 class="text-2xl font-semibold text-gray-800">
+
+
+        Change Role for <span class="text-blue-600">{{ user.username }}</span>
+
+
+      </h2>
+
+      <div class="text-gray-700 space-y-1">
+
+
+        <p><strong>👤 Username:</strong> {{ user.username }}</p>
+
+
+        <p><strong>📧 Email:</strong> {{ user.email }}</p>
+
+        <p>
+          <strong>🧷 Current Role:</strong>
+
+
+          {% if user.groups.first %}
+            {{ user.groups.first.name }}
+
+
+
+
+          {% else %}
+
+            <span class="text-gray-500 italic">No role assigned</span>
+          {% endif %}
+
+        </p>
+      </div>
+
+
+      <div>
+
+
+        <label for="{{ form.role.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-700">
+
+
+          Select a New Role
+        </label>
+        {{ form.role }}
+
+
+        {% if form.role.errors %}
+
+
+          <p class="mt-1 text-sm text-red-600">{{ form.role.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <div class="flex justify-between">
+
+
+
+        {% if user.is_superuser %}
+
+          <a href="{% url 'admin-dashboard' %}" class=" text-black py-2 px-4 bg-gray-300 hover:bg-gray-400 rounded">Cancel</a>
+
+
+        {% elif user.profile.role == 'organizer' %}
+
+
+          <a href="{% url 'organizer-dashboard' %}" class="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded">Cancel</a>
+
+
+        {% else %}
+
+
+          <a href="{% url 'home' %}" class="bg-gray-300 hover:bg-gray-400 text-black py-2 px-4 rounded">Cancel</a>
+
+
+        {% endif %}
+
+        <button type="submit"
+
+
+          class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg ">
+
+
+          Update Role
+        </button>
+      </div>
+
+
+    </form>
+  </div>
+
+  
+</body>
+</html>
