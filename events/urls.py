@@ -5,6 +5,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
 
+
+
+
     path('categories/', views.category_list, name='category-list'),
     path('categories-create/', views.category_create, name='category-create'),
     path('categories-update/<int:id>/', views.category_update, name='category-update'),
@@ -28,8 +31,6 @@ urlpatterns = [
 
 
 
-
-    path('home/',views.home, name='home'),
 
     path('sign-in',views.login_page, name='sign-in'),
     path('sign-up',views.register_page, name='sign-up'),
