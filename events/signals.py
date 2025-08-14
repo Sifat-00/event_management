@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.dispatch import receiver
 from django.conf import settings
+from events.models import Profile
 
 @receiver(post_save,sender=User) 
 def assign_role(sender,instance,created, **kwargs) :
@@ -13,7 +14,7 @@ def assign_role(sender,instance,created, **kwargs) :
         instance.groups.add(user_group)
         instance.save()
 
-@receiver(post_save, sender =User )
+@receiver(post_save, sender =User)
 def send_activation_email(sender, instance, created, **kwargs) :
     if created :
         token = default_token_generator.make_token(instance)
@@ -34,3 +35,11 @@ def send_activation_email(sender, instance, created, **kwargs) :
             
         except Exception as e :
             print(f"Failed to send email to {instance.email} : {str(e)} ")
+
+
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)

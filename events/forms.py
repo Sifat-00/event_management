@@ -6,8 +6,7 @@ from .models import Category
 from .models import Event
 from .models import Participant
 from django.contrib.auth.models import Group
-
-
+from .models import Profile
 
 
 class StyleMixin:
@@ -181,3 +180,18 @@ class CreateGroupForm(forms.ModelForm):
                 'placeholder': 'Enter group name',
             }),
         }
+
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+
+
+        fields = ['profile_pic', 'phone_num']
+
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']

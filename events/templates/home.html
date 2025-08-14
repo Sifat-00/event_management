@@ -71,6 +71,10 @@
         <span class="text-gray-600">Hello, {{ user.username }}</span>
 
 
+        <a href="{% url 'profile' %}" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
+      Profile
+    </a>
+
         <form action="{% url 'logout' %}" method="POST" >
 
 
@@ -120,4 +124,4 @@
 
 
 </body>
-</html>
+</html> 

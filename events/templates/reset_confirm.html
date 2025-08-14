@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class=" flex items-center justify-center font-sans bg-gray-50 min-h-screen ">
+
+  <div class="bg-white p-7 rounded-xl shadow-md w-full max-w-sm">
+
+
+
+    <h2 class="text-2xl  mb-6 text-center  font-bold text-gray-800">Reset Your Password</h2>
+
+    {% if messages %}
+
+      <div class="mb-4">
+
+        {% for message in messages %}
+
+          <p class="text-sm text-red-700 bg-red-100 p-3 rounded mb-2">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="POST" class="space-y-4">
+
+      {% csrf_token %}
+      <div>
+
+         <label class="block mb-1 text-gray-700">New Password</label>
+  <input type="password" name="new_password" required class="w-full p-2 border rounded mb-4">
+
+  <label class="block mb-1 text-gray-700">Confirm Password</label>
+
+
+  <input type="password" name="confirm_password" required class="w-full p-2 border rounded mb-4">
+
+
+  
+  <button type="submit" class="w-full bg-purple-600 text-white p-2 rounded hover:bg-purple-500">Reset Password</button>
+
+    </form>
+
+    <p class="text-sm text-gray-400 mt-4 text-center">
+      Remember your password? 
+
+      <a href="{% url 'sign-in' %}" class="text-purple-700  hover:underline">Sign In</a>
+    </p>
+
+
+  </div>
+
+</body>
+
+</html>
